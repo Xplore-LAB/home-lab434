@@ -1,0 +1,100 @@
+# Cleanup Rules for Agent Toolkit
+# 每条规则：name / match / keep_days / action
+# action: archive | move | delete
+
+rules:
+  - name: "tmp-files"
+    match:
+      - "**/*.tmp"
+      - "**/*.swp"
+      - "**/*.swo"
+      - "**/*.bak"
+      - "**/*.cache"
+    keep_days: 7
+    action: delete
+    description: "临时文件、交换文件"
+
+  - name: "os-artifacts"
+    match:
+      - "**/.DS_Store"
+      - "**/Thumbs.db"
+      - "**/desktop.ini"
+    keep_days: 7
+    action: delete
+    description: "操作系统垃圾文件"
+
+  - name: "python-cache"
+    match:
+      - "**/__pycache__/**"
+      - "**/*.pyc"
+      - "**/*.pyo"
+    keep_days: 7
+    action: delete
+    description: "Python 缓存"
+
+  - name: "node-cache"
+    match:
+      - "**/.cache/**"
+      - "**/node_modules/.cache/**"
+    keep_days: 7
+    action: delete
+    description: "Node.js 缓存"
+
+  - name: "old-logs"
+    match:
+      - "**/*.log"
+      - "**/logs/**"
+    keep_days: 30
+    max_size_mb: 10
+    action: archive
+    description: "超过 30 天或超过 10MB 的日志"
+
+  - name: "scratch-files"
+    match:
+      - "scratch/**"
+    keep_days: 7
+    action: move
+    destination: "memory/scratch-archive"
+    description: "scratch 临时文件，超过 7 天自动归档"
+
+  - name: "experiment-artifacts"
+    match:
+      - "out/**"
+      - "experiments/**"
+      - "logs/archive/**"
+    keep_days: 60
+    action: archive
+    description: "超过 60 天的实验产物"
+
+  - name: "research-build"
+    match:
+      - "research/build/**"
+      - "research/dist/**"
+      - "research/.cache/**"
+    keep_days: 14
+    action: delete
+    description: "研究目录下的构建产物"
+
+  - name: "core-files-keep"
+    match:
+      - "**/README.md"
+      - "**/FILE-MAP.md"
+      - "**/BEST_PRACTICES.md"
+      - "**/toolkit.json"
+      - "**/SOUL.md"
+      - "**/USER.md"
+      - "**/MEMORY.md"
+      - "**/IDENTITY.md"
+      - "**/DREAMS.md"
+      - "**/AGENTS.md"
+    keep_days: 0
+    action: keep
+    description: "核心文件，永久保留"
+
+  - name: "daily-memory-keep"
+    match:
+      - "memory/*.md"
+      - "memory/**/*.md"
+    keep_days: 0
+    action: keep
+    description: "memory 目录，永久保留"

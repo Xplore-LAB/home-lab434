@@ -1,0 +1,60 @@
+# Workspace Governance Safety Policy
+version: "1.0"
+updated_at: "2026-10-06"
+
+# 单次操作上限
+limits:
+  max_files_per_run: 200
+  max_bytes_per_run: "5GB"
+  large_file_protection: "100MB"
+
+# 禁止删除/移动的路径模式
+protected_paths:
+  - ".git/**"
+  - "node_modules/**"
+  - ".venv/**"
+  - "venv/**"
+  - "dist/**"
+  - "build/**"
+  - ".next/**"
+  - ".idea/**"
+  - ".vscode/**"
+  - "memory/*.md"
+  - "*.key"
+  - "*.pem"
+  - "*.env"
+  - ".env.*"
+
+# 保留最近 N 天的备份
+retention:
+  default_days: 7
+  max_backups: 10
+
+# 白名单：这些路径的内容不会被建议清理
+whitelist:
+  - "scaffold/**"
+  - "templates/**"
+  - "config/**"
+  - "hooks/**"
+  - "utils/**"
+  - "README.md"
+  - "FILE-MAP.md"
+  - "BEST_PRACTICES.md"
+  - "toolkit.json"
+  - "SOUL.md"
+  - "USER.md"
+  - "MEMORY.md"
+  - "IDENTITY.md"
+  - "DREAMS.md"
+  - "AGENTS.md"
+
+# 需要人类确认的模式（即使 dry-run 也高亮）
+confirm_required:
+  - "scratch/**"
+  - "out/**"
+  - "logs/**"
+  - "*.tar.gz"
+  - "*.zip"
+  - "*.7z"
+  - "*.sqlite"
+  - "*.db"

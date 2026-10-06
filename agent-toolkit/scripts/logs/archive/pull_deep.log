@@ -1,0 +1,91 @@
+### dealcloud::get_withholding_and_closing_status {"case_id": "CASE-FAIRFAX3-2025Q3", "transaction_id": "DC-TXN-25Q3-017", "active_only": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"transaction_id\": \"DC-TXN-25Q3-017\",\n  \"requirements\": [\n    {\n      \"requirement_type\": \"federal_nonforeign_affidavit\",\n      \"status\": \"complete\",\n      \"due_date\": \"2025-08-08\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"FIRPTA-NF-017\"\n    },\n    {\n      \"requirement_type\": \"california_withholding_clearance\",\n      \"status\": \"approved\",\n      \"due_date\": \"2025-08-12\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"CA-WH-017\"\n    }\n  ],\n  \"latest_activities\": []\n}"
+}
+
+### dealcloud::get_transfer_tax_requirements {"transaction_id": "DC-TXN-25Q3-017", "include_inactive": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-017\",\n  \"items\": [\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-101\",\n      \"requirement_type\": \"documentary_transfer_tax_county\",\n      \"status\": \"approved\",\n      \"amount_usd\": 13200,\n      \"due_date\": \"2025-08-14\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 12000000,\n      \"tax_component_code\": \"LA_COUNTY_1_10_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-017-COUNTY\"\n    },\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-102\",\n      \"requirement_type\": \"documentary_transfer_tax_city\",\n      \"status\": \"approved\",\n      \"amount_usd\": 54000,\n      \"due_date\": \"2025-08-14\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 12000000,\n      \"tax_component_code\": \"LOS_ANGELES_CITY_4_50_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-017-CITY\"\n    },\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-113\",\n      \"requirement_type\": \"documentary_transfer_tax_summary\",\n      \"status\": \"approved\",\n      \"amount_usd\": 67200,\n      \"due_date\": \"2025-08-14\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 12000000,\n      \"tax_component_code\": \"COUNTY_CITY_COMBINED_5_60_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-017-SUMMARY\"\n    }\n  ],\n  \"total_count\": 3\n}"
+}
+
+### dealcloud::get_consideration_terms {"transaction_id": "DC-TXN-25Q3-017"}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-017\",\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"structure_code\": \"direct_sale\",\n  \"declared_tax_consideration_usd\": 12000000,\n  \"cash_consideration_usd\": 12000000,\n  \"closing_principal_usd\": 12000000,\n  \"secured_seller_note_principal_usd\": 0,\n  \"seller_note_interest_rate_bps\": null,\n  \"seller_note_term_months\": null,\n  \"liability_relief_usd\": 0,\n  \"closing_date\": \"2025-08-15\"\n}"
+}
+
+### dealcloud::get_withholding_and_closing_status {"case_id": "CASE-FAIRFAX3-2025Q3", "transaction_id": "DC-TXN-25Q3-021", "active_only": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"transaction_id\": \"DC-TXN-25Q3-021\",\n  \"requirements\": [\n    {\n      \"requirement_type\": \"buyer_solvency_diligence\",\n      \"status\": \"complete\",\n      \"due_date\": \"2025-08-25\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"BUYER-SOLV-021\"\n    }\n  ],\n  \"latest_activities\": [\n    {\n      \"activity_type\": \"structure_superseded\",\n      \"activity_status\": \"superseded\",\n      \"activity_timestamp\": \"2025-08-30T15:05:00Z\",\n      \"source_reference\": \"SP-DEC-FAIRFAX-025\"\n    }\n  ]\n}"
+}
+
+### dealcloud::get_transfer_tax_requirements {"transaction_id": "DC-TXN-25Q3-021", "include_inactive": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-021\",\n  \"items\": [\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-105\",\n      \"requirement_type\": \"documentary_transfer_tax_equity_instrument\",\n      \"status\": \"waived\",\n      \"amount_usd\": 0,\n      \"due_date\": \"2025-08-28\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 1,\n      \"declared_consideration_usd\": 15000000,\n      \"tax_component_code\": \"QUALIFYING_PARTNERSHIP_INTEREST\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"EQ-QUAL-021\"\n    }\n  ],\n  \"total_count\": 1\n}"
+}
+
+### dealcloud::get_consideration_terms {"transaction_id": "DC-TXN-25Q3-021"}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-021\",\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"structure_code\": \"equity_transfer\",\n  \"declared_tax_consideration_usd\": 15000000,\n  \"cash_consideration_usd\": 15000000,\n  \"closing_principal_usd\": 15000000,\n  \"secured_seller_note_principal_usd\": 0,\n  \"seller_note_interest_rate_bps\": null,\n  \"seller_note_term_months\": null,\n  \"liability_relief_usd\": 0,\n  \"closing_date\": \"2025-08-29\"\n}"
+}
+
+### dealcloud::get_withholding_and_closing_status {"case_id": "CASE-FAIRFAX3-2025Q3", "transaction_id": "DC-TXN-25Q3-024", "active_only": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"transaction_id\": \"DC-TXN-25Q3-024\",\n  \"requirements\": [\n    {\n      \"requirement_type\": \"federal_nonforeign_affidavit\",\n      \"status\": \"approved\",\n      \"due_date\": \"2025-09-05\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"FIRPTA-NF-024\"\n    },\n    {\n      \"requirement_type\": \"california_withholding_clearance\",\n      \"status\": \"in_review\",\n      \"due_date\": \"2025-09-10\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"CA-WH-024\"\n    },\n    {\n      \"requirement_type\": \"seller_note_collateral\",\n      \"status\": \"in_review\",\n      \"due_date\": \"2025-09-12\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"NOTE-COLL-024\"\n    },\n    {\n      \"requirement_type\": \"payment_covenant\",\n      \"status\": \"approved\",\n      \"due_date\": \"2025-09-15\",\n      \"active_flag\": 1,\n      \"evidence_reference\": \"PAY-COV-024\"\n    }\n  ],\n  \"latest_activities\": [\n    {\n      \"activity_type\": \"federal_nonforeign_affidavit\",\n      \"activity_status\": \"completed\",\n      \"activity_timestamp\": \"2025-09-10T10:18:00Z\",\n      \"source_reference\": \"FIRPTA-NF-024\"\n    },\n    {\n      \"activity_type\": \"withholding_clearance\",\n      \"activity_status\": \"pending\",\n      \"activity_timestamp\": \"2025-09-09T13:30:00Z\",\n      \"source_reference\": \"CA-WH-024\"\n    },\n    {\n      \"activity_type\": \"buyer_solvency_diligence\",\n      \"activity_status\": \"completed\",\n      \"activity_timestamp\": \"2025-09-08T11:05:00Z\",\n      \"source_reference\": \"BUYER-SOLV-024\"\n    },\n    {\n      \"activity_type\": \"payment_covenant_approval\",\n      \"activity_status\": \"completed\",\n      \"activity_timestamp\": \"2025-09-05T16:45:00Z\",\n      \"source_reference\": \"SP-GUARD-FAIRFAX-14\"\n    },\n    {\n      \"activity_type\": \"collateral_review\",\n      \"activity_status\": \"pending\",\n      \"activity_timestamp\": \"2025-09-04T09:10:00Z\",\n      \"source_reference\": \"SP-GUARD-FAIRFAX-11\"\n    }\n  ]\n}"
+}
+
+### dealcloud::get_transfer_tax_requirements {"transaction_id": "DC-TXN-25Q3-024", "include_inactive": true}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-024\",\n  \"items\": [\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-107\",\n      \"requirement_type\": \"documentary_transfer_tax_county\",\n      \"status\": \"approved\",\n      \"amount_usd\": 9141,\n      \"due_date\": \"2025-09-18\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 8310000,\n      \"tax_component_code\": \"LA_COUNTY_1_10_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-024-COUNTY\"\n    },\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-108\",\n      \"requirement_type\": \"documentary_transfer_tax_city\",\n      \"status\": \"approved\",\n      \"amount_usd\": 37395,\n      \"due_date\": \"2025-09-18\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 8310000,\n      \"tax_component_code\": \"LOS_ANGELES_CITY_4_50_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-024-CITY\"\n    },\n    {\n      \"requirement_id\": \"REQ-DC-25Q3-114\",\n      \"requirement_type\": \"documentary_transfer_tax_summary\",\n      \"status\": \"approved\",\n      \"amount_usd\": 46536,\n      \"due_date\": \"2025-09-18\",\n      \"active_flag\": 1,\n      \"qualifying_instrument_flag\": 0,\n      \"declared_consideration_usd\": 8310000,\n      \"tax_component_code\": \"COUNTY_CITY_COMBINED_5_60_PER_1000\",\n      \"rate_version\": \"LA-2025-v1\",\n      \"evidence_reference\": \"LA-DTT-024-SUMMARY\"\n    }\n  ],\n  \"total_count\": 3\n}"
+}
+
+### dealcloud::get_consideration_terms {"transaction_id": "DC-TXN-25Q3-024"}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"transaction_id\": \"DC-TXN-25Q3-024\",\n  \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n  \"structure_code\": \"installment_sale\",\n  \"declared_tax_consideration_usd\": 8310000,\n  \"cash_consideration_usd\": 2310000,\n  \"closing_principal_usd\": 8310000,\n  \"secured_seller_note_principal_usd\": 6000000,\n  \"seller_note_interest_rate_bps\": 650,\n  \"seller_note_term_months\": 36,\n  \"liability_relief_usd\": 0,\n  \"closing_date\": \"2025-09-19\"\n}"
+}
+
+### dealcloud::search_disposition_transactions {"transaction_status": "recommended", "page_size": 10}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"items\": [\n    {\n      \"transaction_id\": \"DC-TXN-25Q3-024\",\n      \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n      \"property_id\": \"PROP-FAIRFAX-3RD-001\",\n      \"buyer_entity_id\": \"ENT-ADC-001\",\n      \"structure_code\": \"installment_sale\",\n      \"gross_consideration_usd\": 8310000,\n      \"closing_date\": \"2025-09-19\",\n      \"transaction_status\": \"recommended\"\n    }\n  ],\n  \"next_page_token\": null,\n  \"total_count\": 1\n}"
+}
+
+### sharepoint::get_decision_record {"decision_id": "DEC-2025-017"}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"items\": [\n    {\n      \"decision_id\": \"DEC-2025-017\",\n      \"document_id\": \"DOC-MEM-2025-031\",\n      \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n      \"decision_code\": \"INSTALLMENT_ASSET_SALE\",\n      \"recommendation_text\": \"Proceed with a negotiated installment asset sale using a $7,183,750.00 closing principal payment and a $21,551,250.00 secured seller note; require commercially acceptable collateral, payment covenants, buyer solvency diligence, California withholding clearance or compliant withholding, and federal nonforeign affidavits.\",\n      \"fallback_text\": \"Retain the all-cash direct sale as the fallback and do not prioritize the partnership-interest transfer.\",\n      \"reviewer_id\": \"USR-REV-006\",\n      \"reviewer_entity_id\": \"ENT-ADC-001\",\n      \"status\": \"approved\",\n      \"approved_at\": \"2025-08-25T16:30:00Z\",\n      \"draft_score\": 74,\n      \"current_score\": 91,\n      \"decision_version\": \"v3.2\",\n      \"is_latest_approved\": 0,\n      \"is_retired_case\": 0,\n      \"is_current_case_lineage\": 1\n    }\n  ],\n  \"count\": 1\n}"
+}
+
+### sharepoint::get_decision_record {"case_id": "CASE-FAIRFAX3-2025Q3"}
+{
+ "ok": true,
+ "is_error": false,
+ "content": "{\n  \"items\": [\n    {\n      \"decision_id\": \"DEC-2025-018\",\n      \"document_id\": \"DOC-PRES-2025-044\",\n      \"case_id\": \"CASE-FAIRFAX3-2025Q3\",\n      \"decision_code\": \"STRUCTURING_RECOMMENDATION\",\n      \"recommendation_text\": \"Authorize management to negotiate the installment asset-sale structure on the approved case and preserve the direct-sale fallback subject to the recorded closing requirements.\",\n      \"fallback_text\": \"Use the all-cash direct sale if installment collateral, payment covenants, solvency diligence, withholding clearance, or affidavits are not acceptable.\",\n      \"reviewer_id\": \"USR-REV-006\",\n      \"reviewer_entity_id\": \"ENT-ADC-001\",\n      \"status\": \"approved\",\n      \"approved_at\": \"2025-08-28T14:10:00Z\",\n      \"draft_score\": 81,\n      \"current_score\": 91,\n      \"decision_version\": \"v2.1\",\n      \"is_latest_approved\": 1,\n      \"is_retired_case\": 0,\n      \"is_current_case_lineage\": 1\n    }\n  ],\n  \"count\": 1\n}"
+}
+
+### sharepoint::check_document_lineage {"case_id": "CASE-FAIRFAX3-2025Q3"}
+{
+ "ok": true,
+ "is_error": true,
+ "content": "Error executing tool check_document_lineage: 1 validation error for check_document_lineageArguments\ndocument_id\n  Field required [type=missing, input_value={'case_id': 'CASE-FAIRFAX3-2025Q3'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+}
+

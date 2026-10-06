@@ -1,0 +1,48 @@
+{
+  "reward": 1.0,
+  "score": 1.0,
+  "strict_pass": null,
+  "deterministic_score": null,
+  "judge_score": null,
+  "judge_all_passed": null,
+  "passed": 6,
+  "total": 6,
+  "results": [
+    {
+      "id": "current_recommended_structure",
+      "score": 1.0,
+      "passed": true,
+      "message": "llm 1票"
+    },
+    {
+      "id": "documentary_tax_components",
+      "score": 1.0,
+      "passed": true,
+      "message": "llm 1票"
+    },
+    {
+      "id": "protection_statuses",
+      "score": 1.0,
+      "passed": true,
+      "message": "llm 1票"
+    },
+    {
+      "id": "controlled_payment_split_and_fallback",
+      "score": 1.0,
+      "passed": true,
+      "message": "llm 1票"
+    },
+    {
+      "id": "readiness_conclusion",
+      "score": 1.0,
+      "passed": true,
+      "message": "llm 1票"
+    },
+    {
+      "id": "source_data_present",
+      "score": 1.0,
+      "passed": true,
+      "message": "Recommended installment transaction, seven active requirements, and approved decision are present"
+    }
+  ]
+}

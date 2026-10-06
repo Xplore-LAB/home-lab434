@@ -1,0 +1,21 @@
+- [ClaudeCode permission preference](claudecode-permission-pref.md) — user prefers acceptEdits + Bash whitelist, global scope, over full bypassPermissions
+- [User academic identity](user-academic-identity.md) — 在读研究生，论文导向
+- [User research directions](user-research-directions.md) — 工业过程控制+AI/LLM、大模型微调与评测、知识图谱/Neo4j 三个方向
+- [User research infrastructure](user-research-infrastructure.md) — Blackwell GB10 + VLLM (Qwen3.6-35B-A3B-NVFP4) + Neo4j + DeepSeek V4 GGUF
+- [User current projects](user-current-projects.md) — pkmemory-agent（新主线）+ air-separation-project（老主线）+ CAC2026 OKC-SFT + bench
+- [User writing language](user-writing-language.md) — 中英文并行，首次专有名词给中英对照
+- [User academic task needs](user-academic-task-needs.md) — 文献调研、论文写作、数据集与实验设计、代码工程实现 四类
+- [Auto git sync preference](feedback-auto-git-sync.md) — 任务完成后自动 commit + push 到 GitHub
+- [Fast reuse strategy](feedback-fast-reuse-strategy.md) — 学术研究策略：极速、复用优先、少写代码多写论文
+- [Decision clarity](feedback-decision-clarity.md) — 决策时刻保持简短：事实→决策点→推荐，不要堆砌反方/失败模式
+- [pkmemory target venue](project-pkmemory-target-venue.md) — 目标：AI 顶会（NeurIPS/ICML/ICLR），所有技术决策按顶会门槛对齐
+- [openclaw tools message](openclaw-tools-alsoallow-message.md) — alsoAllow 的 message/group:messaging 不能删，weixin 依赖
+- [Default model](feedback-default-model.md) — 默认模型用 MiniMax-M3
+- [mobileforge 复现搁置](project-mobileforge-shelved.md) — GB10 kernel 不支持 redroid，2026-07-20 决定搁置；未来需云/非 GB10 环境
+- [Home file management rules](home-file-management-rules.md) — /home/lab434 长期规则：workspace/README.md 唯一事实源、10 分类、KEEP_IN_PLACE、safe delete、Git dirty 必须先分类、新项目禁直接放根目录
+- [Claude 角色：执行试错 > 文档产出](self-role-fit-writer-vs-executor.md) — 不擅长独立写长文档（易 hallucinate 内容/ID），擅长多轮 run/verify/iterate/调研；写文档先 outline + 单章节让用户检视，绝不一次 W 整篇
+- [Claude 主业 = 实验执行](self-role-primary-experimenter.md) — run/benchmark/train/probe/measure 是默认 owner 模式；用户给实验任务时自己排 ablation/seed/metrics/exit criteria；写文/选题/定 claim 是用户主导
+- [Docker Hub 网络约束](docker-registry-network.md) — GB10 上 Docker Hub 被墙+匿名限流；mihomo 7890 代理 + skopeo 绕行 + docker load 方案（已验证）；daemon 代理已配
+- [CCR aware router](ccr-aware-router.md) — aiohttp 代理 :3459，按请求 body 分类 chat→deepseek-free / tool→MiniMax-M3
+- [OpenClaw ds-free-web](openclaw-ds-free-web.md) — OpenClaw primary=deepseek-free-web/deepseek-default + secrets.json 必须配 apiKey
+- [GB10 桌面不显示](gb10-display-edid-black-screen.md) — 真因**未证实**（原 EDID 死锁说＝推断，2026-09-28 复核证据不支持）；已 set-default multi-user.target 持久化进命令行模式；出厂三层锁死 Xorg；别再念 EDID 根因

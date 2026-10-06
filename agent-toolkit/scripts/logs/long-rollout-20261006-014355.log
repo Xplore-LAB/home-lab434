@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/home/lab434/research/rl-lab/mimo-docker/rollout2.py", line 256, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/lab434/research/rl-lab/mimo-docker/rollout2.py", line 180, in main
+    info = load_instance(a.instance)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lab434/research/rl-lab/mimo-docker/rollout2.py", line 55, in load_instance
+    for r in pq.read_table(PARQUET).to_pylist():
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lab434/.local/lib/python3.12/site-packages/pyarrow/parquet/core.py", line 1891, in read_table
+    dataset = ParquetDataset(
+              ^^^^^^^^^^^^^^^
+  File "/home/lab434/.local/lib/python3.12/site-packages/pyarrow/parquet/core.py", line 1471, in __init__
+    self._dataset = ds.dataset(path_or_paths, filesystem=filesystem,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lab434/.local/lib/python3.12/site-packages/pyarrow/dataset.py", line 790, in dataset
+    return _filesystem_dataset(source, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lab434/.local/lib/python3.12/site-packages/pyarrow/dataset.py", line 472, in _filesystem_dataset
+    fs, paths_or_selector = _ensure_single_source(source, filesystem)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lab434/.local/lib/python3.12/site-packages/pyarrow/dataset.py", line 437, in _ensure_single_source
+    raise FileNotFoundError(path)
+FileNotFoundError: /home/lab434/datasets/MiMo-V2.6-RL-oss/general/train.parquet

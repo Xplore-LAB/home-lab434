@@ -1,0 +1,15 @@
+{
+  "name": "agent-toolkit",
+  "version": "0.1.0",
+  "description": "Common agent problems solved - workspace governance, experiment runner, research notes",
+  "modules": [
+    "workspace-governance",
+    "experiment-runner",
+    "research-notes",
+    "utils",
+    "hooks",
+    "templates"
+  ],
+  "created_at": "2026-10-06T03:10:00+08:00",
+  "author": "lab434"
+}
