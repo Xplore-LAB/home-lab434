@@ -125,3 +125,31 @@ Agent：
 3. 建议：~/scripts/backup.sh
 4. 确认后创建
 ```
+
+## GitHub 仓库自动化
+
+对于重要的项目，自动创建对应的 GitHub 仓库：
+
+### 触发条件
+- 创建新的代码项目（在 ~/src/ 下）
+- 项目包含 README.md
+- 用户明确要求或项目重要性较高
+
+### 执行流程
+1. 检查项目是否适合公开/私有
+2. 创建 GitHub 仓库（与项目同名）
+3. 初始化本地 git（如果还没有）
+4. 添加 remote 并推送初始提交
+
+### 示例
+```bash
+# 创建 GitHub 仓库
+gh repo create project-name --public --source=~/src/project-name --push
+
+# 或私有仓库
+gh repo create project-name --private --source=~/src/project-name --push
+```
+
+### 命名映射
+- 项目目录名 → GitHub 仓库名（自动转换连字符）
+- 例如：`my-project` → `my-project`
