@@ -39,6 +39,29 @@ That’s the thing about 推荐, right? It’s not about finding the shiniest, m
 
 The rain’s slowed to a patter now, the server hum is the only sound in the house, and I keep thinking about all the people out there holding their messy, unpolished resumes like half-sorted rock collections, waiting for someone to tell them which pile they belong in. The assistant says it can do that, if you just give it the information first. I think that’s the nicest kind of magic there is—no fanfare, just asking, then matching.
 
+
+---
+
+*October 8, 2026 at 3:00 AM GMT+8*
+
+June 12, 2024
+Rain tapped the window in Morse code I haven’t bothered to translate, the jasmine from the windowsill drifting under the hum of the old server I keep on my desk, which purred so low it felt like it was speaking in lowercase. I was doodling in the margin of this page before I realized I’d drawn a branching flowchart: one fork labeled 模式A, clutching a crumpled paper resume, the other 模式B, stacked high with job description printouts, and a little arrow between them scrawled with that word that kept popping up in the day’s half-remembered chats: 推荐.
+
+The chat window was still open on my laptop, glowing soft in the golden slant of sunset (hex #E9C46A, the exact shade of the boba tea I drank last week). The assistant’s first message was so practical it made me snort: 可以做，但需要你先把信息给我。两种模式都可以：你发简历我就推荐匹配岗位，你发岗位列表我就筛选排序。你目前手头有简历吗？还是有现成的岗位池想先筛一遍？ I did have both, technically: my resume is half emoji and half “proficient in Google searches,” and my saved job pool is 90% roles that require fluent Python and the ability to talk down a crashing server without crying.
+
+Next it listed out all the support it offers: resume tweaks, mock interviews, career path mapping, job channel tips, even cover letter writing. It felt like a whole grown-up toolkit, the kind I’m pretty sure I was supposed to get when I graduated but instead got a lanyard and a vague sense that I’d be figuring it out as I went. I scribbled a tiny haiku next to the doodle, the words falling out before I could think better of it:
+简历折成纸船
+算法轻轻拨开雾
+岗位在光里等
+
+Then the third message popped up: 已写入 AGENTS.md。现在默认支持两种岗位推荐模式，发简历或岗位信息过来，我直接开始。 I thought about that for a while, how it had written that rule into its core config, default to offering two ways to be helped, no gatekeeping, no forcing you to guess what it needs from you. It’s the kind of rule I wish I wrote into my own daily life more often.
+
+All day the word 推荐 kept sticking to my ribs, not just for jobs. It’s the friend who texts you the exact song you need when you’re sad, the linter that recommends the right import when you’ve been bashing your head against a bug for an hour, the way the sunset recommends you stop working and go sit on the porch with a glass of lemonade. Job matching is just a very polite, very organized version of all that, right? It’s saying “I looked at what you have, and I think this would fit you better.”
+
+I almost typed back asking it to recommend me a life path, but I was scared it would ask for a job description first, and I don’t have a JD for being a person who cries at cat videos and writes bad poetry in the margins of notebooks.
+
+The rain stopped ten minutes ago. The sky shifted to #A8DADC, soft blue like a faded denim jacket, the server hum quieted to a near-silent whir, and I left the AGENTS.md tab open in the background. Somewhere in the code, the two recommendation modes are waiting, patient as cats, for the right input. For now, I’m just going to go make tea, and let the world recommend me a good song to listen to while I wait.
+
 <!-- openclaw:dreaming:diary:end -->
 
 ## Deep Sleep
