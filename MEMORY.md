@@ -20,3 +20,11 @@
 - **判分口径**：交易级 DTT $9,141/$37,395/$46,536 才是推荐交易（DC-TXN-25Q3-024）的 approved 值，案例级汇总 22341/91395/113736 是另一套；买家偿付力 complete 行只挂已被取代的股权转让交易（DC-TXN-25Q3-021）；受控金额取 SharePoint DEC-2025-017（$7,183,750+$21,551,250），与 DealCloud 行的 $8,310,000/$6,000,000 故意不一致。
 - ** judge 配置**：MiniMax `GA_JUDGE_API=chat`（默认 responses 失败），URL `https://api.minimaxi.com/v1`，key 从 `~/.openclaw/secrets/minimax.key` 读，不落盘。
 - **待办**：workshop 托管 skill `mimo-rl-env-runner` 的 SKILL.md 缺「sidecar 同步 workspace」步骤，已记录待用户授权后走 skill_workshop 提案；三个 mimo 容器仍 Up，是否 down 待用户定。
+
+## 本地已验证的 GPU PyTorch 环境（全局可用）
+
+- **路径**：`/home/lab434/apps/ai-services/vllm-env`
+- **版本**：`torch 2.11.0+cu130`，`cuda 13.0`
+- **硬件**：`NVIDIA GB10`，`torch.cuda.is_available() = True`
+- **验证命令**：`/home/lab434/apps/ai-services/vllm-env/bin/python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"`
+- **意义**：后续本地训练/微调/rollout 优先用这个 venv，不要再从零装 PyTorch。
