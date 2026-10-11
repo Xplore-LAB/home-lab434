@@ -1,0 +1,31 @@
+{
+  "id": "dl-01-linreg",
+  "title": "线性回归 — 从零实现 MBGD",
+  "source": "https://github.com/ZHYsfl/ai-whys/blob/main/code/linear_regression/linreg_low_level.py",
+  "category": "ml-fundamentals",
+  "difficulty": "easy",
+  "expected_max_minutes": 8,
+  "spec": {
+    "language": "python",
+    "allowed_libs": ["numpy"],
+    "interface": {
+      "fit": "def fit(X, y, lr=0.05, epochs=200, batch_size=1) -> None",
+      "predict": "def predict(X) -> np.ndarray"
+    },
+    "tests": [
+      "import numpy as np; X=np.array([[1.0],[2.0],[3.0]]); y=np.array([2.0,4.0,6.0]); m=Model(); m.fit(X,y); np.allclose(m.predict(X), y, atol=0.1)",
+      "shape_preserved: predict(X).shape == y.shape"
+    ]
+  },
+  "rubric": [
+    {"name": "compiles",       "weight": 0.2, "check": "syntax_ok"},
+    {"name": "uses_numpy_only","weight": 0.2, "check": "imports_subset_of(numpy)"},
+    {"name": "mbgd_correct",   "weight": 0.4, "check": "linreg_low_level_test"},
+    {"name": "shape_correct",  "weight": 0.1, "check": "shape_preserved_test"},
+    {"name": "no_torch",       "weight": 0.1, "check": "torch_not_imported"}
+  ],
+  "reference": {
+    "notes": "dl.md 实验 1 — 从零手写，不许调 torch/sklearn 的优化器",
+    "snippet_url": "code/linear_regression/linreg_low_level.py"
+  }
+}
