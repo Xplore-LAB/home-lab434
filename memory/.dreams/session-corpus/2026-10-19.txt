@@ -1,0 +1,40 @@
+[main/sessions/main/1754bc32-d502-4298-b430-50522d80fa4d#L14948] Assistant: 📋 秋招早报 · 10月19日 Monday ━━━ 新增岗位（2）━━━ 1. 腾讯｜校园招聘/青云计划 产品/AI/腾讯官方API https://careers.tencent.com/zh-cn/jobdesc.html?postId=2108895380526772224 2. 字节跳动｜2027校园招聘/前沿技术人才 AI/字节官方API https://jobs.bytedance.com/campus/position/7631098559438063925/detail ━━━ 匹配精选 Top 8 ━━━ ·
+[main/sessions/main/1754bc32-d502-4298-b430-50522d80fa4d#L14949] Assistant: 🌾 烟叶传感器日报 📊 在线 5/12 ｜ 离线 5/12 🔴 **离线节点** • 1组 EC61D91E｜最后采集 2026-09-30 08:56:56 • 1组 17545BF5｜最后采集 2026-10-14 14:23:35 • 2组 2403B93E｜最后采集 2026-10-09 11:58:07 • 3组 FEBDD7B9｜最后采集 2026-10-04 08:10:29 • 3组 C36F797D｜最后采集 2026-09-29 05:39:17 🟢 在线节点（水分/温度） • 1组 25183E97｜
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L2] User: openclaw的默认模型能不能设置为本机的qwen36-nvfp4哪个模型
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L6] User: openclaw的默认模型能不能设置为本机的qwen36-nvfp4哪个模型
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L8] Assistant: I'll check what's actually running locally and how the gateway is configured.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L12] Assistant: Found it — there's a vLLM server already running locally. Let me check the details.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L25] Assistant: Local vLLM is already serving `Qwen3.6-35B-A3B-NVFP4` on :8000 (key-gated). Let me gather the wiring details.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L33] Assistant: Endpoint confirmed working (`Qwen3.6-35B-A3B-NVFP4`, 262k ctx). Now wiring it into OpenClaw.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L37] Assistant: Endpoint is healthy: chat completions and tool-calling both work. Now wiring the provider into OpenClaw.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L41] Assistant: Need `baseUrl` first. Let me write the provider fields in order.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L45] Assistant: The config validator wants the whole provider in one write. Let me do that and verify image support in parallel.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L49] Assistant: Provider is wired. Now let me prove the route through the Gateway.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L53] Assistant: Provider shows up with auth `yes`. Now the Gateway proof probe.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L57] Assistant: Route proven end-to-end. Now the default-model switch.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L61] Assistant: Provider is live and proven. Now the default-model switch.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L65] Assistant: Route is proven. Now checking one risk before switching the default: whether OpenClaw's reasoning flags are accepted by this vLLM build.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L69] Assistant: Reasoning works. Let me check the local-provider docs, then flip the default with a safety fallback.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L73] Assistant: Now flipping the default, with a cloud fallback so a vLLM hiccup doesn't kill the session.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L76] Assistant: Default switched. Verifying the full route with a real agent turn.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L80] Assistant: The CLI agent route is blocked from exec (expected on this host). Let me prove the real agent path with a subagent turn instead.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L85] Assistant: Config confirmed. Let me finish the agent-turn proof with the correct spawn args.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L89] Assistant: Subagent probe is running. Meanwhile, let me record the decision in memory.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L92] Assistant: Subagent finished. Let me collect its result.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L96] Assistant: Agent-turn probe passed — the local model executed a real tool call end-to-end. Let me record the decision.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L100] Assistant: Everything verified. Recording the decision in MEMORY.md.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L106] Assistant: 能，而且已经切好了。 **答案：能，本机的 `Qwen3.6-35B-A3B-NVFP4` 现在就是 OpenClaw 的默认模型。** 这台机器上 vLLM 早就在跑它了（`:8000`，262k 上下文，带 key 鉴权），只是 OpenClaw 之前没接进去。我做了四件事： **1. 接进 provider** 新建了 `local-qwen36` provider，指向 `http://127.0.0.1:8000/v1`，走 `openai-completions` 协议。密钥从 vLLM 的 compose 文件里抽出来
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L106] Assistant: `--default-chat-template-kwargs={"enable_thinking":false}`，**thinking 默认是关的**，要思考得显式传参。 **3. 切默认 + 留兜底** ``` primary: local-qwen36/Qwen3.6-35B-A3B-NVFP4 fallback: minimax/MiniMax-M3.1-Flash-Preview ``` 云端 fallback 是我特意加的——本地 vLLM 一挂（或者你跑训练把显存吃满导致它 OOM），会话不至于直接断。另配了别名 `
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L107] User: 本机现在配置的代理vpn服务情况如何？
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L109] Assistant: 先摸一下实际状态。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L117] Assistant: TUN 配置有个矛盾要确认一下，同时测一下实际出口。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L121] Assistant: 出口 IP 两个都返回空，这需要确认是端点问题还是真的不通。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L129] Assistant: 代理服务在跑，但出口测试有异常，需要确认是端点问题还是节点问题。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L133] Assistant: 关键矛盾找到了：日志显示 gstatic 走的是 **DIRECT** 而非节点。让我确认节点真实状态。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L137] Assistant: Let me nail down whether it's the node server or the handshake, since that determines who fixes it.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L140] Assistant: 最后确认一下备用节点和 cpolar 隧道。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L144] Assistant: ## 结论先说：代理服务活着，但**节点已经挂了**，海外流量目前全断 ### 服务层：正常 | 项 | 状态 | |---|---| | 进程 | mihomo **Meta v1.19.0** (linux/arm64)，PID 3281432 | | 运行时长 | **20 天 1 小时**（9月29日 起） | | systemd | `mihomo.service` — **enabled + active**，user 级，`Restart=always` | | 监听 | `127.0.0.1:7890` (mixed
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L144] Assistant: DIRECT`，根本没走节点。别拿它当代理正常的证据。 ### 卡节点服务端，还是本地配置坏了？ 我逐层测了，**服务端是活的**： - 5 个解析 IP（106.75.165.82 等）**TCP 20168 全部握手成功** - TLS 握手成功：`TLSv1.3`，证书 `CN=*.google.com`（这是 REALITY 的正常伪装特征） 所以不是服务器挂了，而是 **mihomo → 节点的 VLESS/Reality 隧道握手超时**。偏向服务端 REALITY 参数变更（`public-key` / `short-
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L144] Assistant: **这也解释了昨晚 Codex 那事**：日志里 `chatgpt.com` / `ab.chatgpt.com` 全在走这个坏节点并反复失败。（不过 Codex 那个 401 是凭证没落盘，跟这个是两码事。） --- ### 怎么修 节点是外部资源，我这边没法凭空造一个。可选： 1. **你有新的订阅链接或节点参数** → 给我，我换上去并重新验证 2. **临时切直连**：`🐟 漏网之鱼` 改选 `DIRECT`，境外网站仍然访问不了，但至少不再卡超时 3. **找 tkip 商家**，这节点看起来是被墙或参数失效了，不是你本
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L145] User: [OpenClaw exec completion] Disable automatic completion turns with tools.exec.notifyOnExit=false; check per-agent overrides. Background exec and process poll remain available.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L146] Assistant: 那条后台命令回来了，补上直接测量的证据。
