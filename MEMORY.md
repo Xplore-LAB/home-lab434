@@ -21,6 +21,28 @@
 - ** judge 配置**：MiniMax `GA_JUDGE_API=chat`（默认 responses 失败），URL `https://api.minimaxi.com/v1`，key 从 `~/.openclaw/secrets/minimax.key` 读，不落盘。
 - **待办**：workshop 托管 skill `mimo-rl-env-runner` 的 SKILL.md 缺「sidecar 同步 workspace」步骤，已记录待用户授权后走 skill_workshop 提案；三个 mimo 容器仍 Up，是否 down 待用户定。
 
+## OpenClaw 默认模型 = 本机 Qwen3.6-35B-A3B-NVFP4（2026-10-19 已切换）
+
+- **默认路由**：`agents.defaults.model = {"primary": "local-qwen36/Qwen3.6-35B-A3B-NVFP4", "fallbacks": ["minimax/MiniMax-M3.1-Flash-Preview"]}`；别名 `Qwen36`。fallback 是刻意留的云端兜底——本地 vLLM 挂了不至于整个会话断掉。
+- **Provider 配置**：`models.providers.local-qwen36`，`baseUrl = http://127.0.0.1:8000/v1`，`api = openai-completions`。**整个 provider 必须一次 `openclaw config set` 写入**（baseUrl/api/apiKey/models 一起），分次写会被校验器逐个拒掉：缺 models 报 "must declare models"，缺 baseUrl 报 "must declare baseUrl"。
+- **密钥**：vLLM 侧 `--api-key` 写在 `~/models/Qwen3.6-35B-A3B-NVFP4-docker-compose.yml` 里；抽出来存成 `~/.openclaw/secrets/local-qwen36.key`（0600），再走 `secrets.providers.local_qwen36_key_file` 文件型 SecretRef 挂到 `models.providers.local-qwen36.apiKey`。值不落 config 明文。
+- **该模型实测能力**（vLLM 0.1.dev19043，262k ctx，qwen3_xml tool parser）：chat ✅、tool call ✅、图片输入 ✅（Qwen3.6 是多模态，config.json 里有 visual tower）、reasoning ✅（`reasoning_effort` 和 `chat_template_kwargs.enable_thinking` 两种写法都接受，返回在 `reasoning` 字段）。注意容器默认 `--default-chat-template-kwargs={"enable_thinking":false}`，即 thinking 默认关，要思考得显式传参。
+- **本机端点分工**（别搞混）：`:8000` = Qwen3.6 NVFP4 主服务（root 起的 vLLM，带 key）；`:8001` = xiyangyang 的 nl2_sql uvicorn；`:8080` = 另一个带鉴权的服务；`:8015` = docker 里给 paper-01 用的 Qwen2.5-Coder-1.5B。
+- **排查坑**：`openclaw agent --agent <id>` 从 exec 里调会被拦（"Gateway agent from agent exec would lose inter-session attribution"）；`openclaw infer model run --gateway` 也一样。**验证要改成 `sessions_spawn`（isolated 子会话）** 才能跑通真实 agent 回合。
+
+## mihomo 代理：主节点 + 订阅备份（2026-10-19 改造）
+
+- **拓扑**：`🐟 漏网之鱼` → `🚀 节点选择`(watcher 切换点) → `⭐ 主节点`(锁定 香港WAP-优化) 或 `♻️ 备用通道`(fallback 120s → `🇸🇬 新加坡优选` → `♻️ 全球优选`)
+- **主节点已换成 `香港WAP-优化`**（2026-10-19 全量扫描 208ms 最快）。原 `[US]-150.241.187.96`（VLESS+REALITY）已降为备选但**质量极差**：实测延迟在 `0/516/759/1275/2549/2998/4410/4432/5489ms` 间剧烈抖动。不要再把它当主节点。
+- **全量扫描结果（27 个订阅节点，16 可用）**：香港WAP-优化 208 / 台湾-优化 272 / 香港WAP-优化3 651 / 台湾-优化3 655 / 日本-优化3 830 / 印度-优化 945 / 美国LA-优化3-GPT 1016 / 新加坡-优化3 2921 / 加拿大-优化 5375。**新加坡是这批里最慢的一档**，用户原话要求“优先新加坡”，但实测比香港慢 14 倍——已告知并把香港提为主节点、新加坡降为备份第一档。
+- **踩坑：provider 节点不能按名字在 `proxies:` 里引用**。`proxy-providers` 里的节点只能用 `use:` + `filter` 引入组；想锁定某一个就用 `type: select` + `use: [subscription]` + `filter: "^香港WAP-优化$"`。写成普通 `proxies:` 会报 `'<name>' not found`。
+- **踩坑：选择器默认选中第一项**。把 `⭐ 主节点` 放在 `🚀 节点选择` 第一位会让 mihomo 启动就切到主节点，**绕过 10 分钟稳定门槛**。第一项必须是 `♻️ 备用通道`。
+- **备份订阅**：27 个真实 vmess 节点（日本/新加坡/香港/台湾/美国LA/加拿大/德国/英国/印度），其中 7 个 GPT 优化线路。实测可用：出口 `45.149.92.22`，延迟 ~614ms，google 204 / huggingface 200。
+- **踩坑：订阅里的前 3 条是伪节点**（`剩余流量：xxx` / `套餐到期` / `过滤掉N条线路`），指向真实服务器所以能“连通”，不过滤会被当节点选中。已用 `proxy-providers.exclude-filter: "剩余流量|套餐到期|过期|过滤掉"` 排除。
+- **踩坑：mihomo 的 fallback 组无法表达“稳定 N 分钟才切回”**。`interval` 同时控制“多久发现故障”和“多久考虑切回”，两者耦合：interval 小 → 故障转移快但切回频繁；interval 大 → 切回慢但故障转移也慢（实测 interval=600 时主节点死了最多卡 10 分钟，境外全断 HTTP=000）。严格语义必须外挂 watcher。
+- **应急手法**：主节点挂了不用等 interval，用控制 API 强制探活可立即切走：`curl "http://127.0.0.1:9090/group/<组名URL编码>/delay?timeout=5000&url=..."`
+- 配置文件 `~/.config/mihomo/config.yaml`（含订阅 token，已设 `chmod 600`）；原始配置备份在 `config.yaml.bak.20261019-165132`。
+
 ## 本地已验证的 GPU PyTorch 环境（全局可用）
 
 - **路径**：`/home/lab434/apps/ai-services/vllm-env`
