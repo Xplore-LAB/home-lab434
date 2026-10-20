@@ -38,3 +38,41 @@
 [main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L144] Assistant: **这也解释了昨晚 Codex 那事**：日志里 `chatgpt.com` / `ab.chatgpt.com` 全在走这个坏节点并反复失败。（不过 Codex 那个 401 是凭证没落盘，跟这个是两码事。） --- ### 怎么修 节点是外部资源，我这边没法凭空造一个。可选： 1. **你有新的订阅链接或节点参数** → 给我，我换上去并重新验证 2. **临时切直连**：`🐟 漏网之鱼` 改选 `DIRECT`，境外网站仍然访问不了，但至少不再卡超时 3. **找 tkip 商家**，这节点看起来是被墙或参数失效了，不是你本
 [main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L145] User: [OpenClaw exec completion] Disable automatic completion turns with tools.exec.notifyOnExit=false; check per-agent overrides. Background exec and process poll remain available.
 [main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L146] Assistant: 那条后台命令回来了，补上直接测量的证据。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L149] User: https://msub.xn--m7r52rosihxm.com/api/v1/client/subscribe?token=***&flag=clash 能不能优先我们那个，然后这个作为那个不行以后的备选，那个行了稳定10分钟后再切回去
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L151] Assistant: 需要先解决一个问题：**你贴的订阅链接 token 是截断的**（`8b6f66…3ab4`），中间省略了。我先看看本机有没有存完整版本。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L157] Assistant: 订阅域名解析到腾讯 EdgeOne（`cnint-edge.gtm-we.com`），国内直连可达。cache.db 里有痕迹，我去找完整 token。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L161] Assistant: 本机没有完整 token —— cache.db 里那条也是从这次对话里缓存的截断版本。**这是硬阻塞：订阅凭据我没法重建。** 在等你的同时，我先把不依赖 token 的部分做完并验证掉。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L164] Assistant: 配置结构验证通过。**现在缺的就一样东西：完整的订阅 token。** 你贴的是 `token=8b6f66…3ab4`，中间省略了。我在本机找过了 —— `cache.db`、会话数据库里存的都只是这次对话的截断版本，没有完整凭据。这个我没法猜也没法绕过。 **麻烦把完整链接再发一次**（或者只补全中间那段 token 就行）。 --- ### 拿到之后我会怎么做（方案已验证可行） 刚才我用 `mihomo -t` 验证了目标配置结构，v1.19.0 接受。要点如下： **1. 拉取并合并订阅** ``` GET msub.建森电
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L164] Assistant: 10 分钟探一次活 timeout: 3000 # 延迟 >3s 视为不健康 proxies: [原节点, 订阅节点…] ``` 你那个原节点上次"能通"时延迟是 **2.8s / 4.1s**——`timeout: 3000` 正好把这种勉强通的挡在外面，等它真修好了（延迟降到 1s 内）才会被选回。效果上就等价于"真稳定了才切回"。 **B. 严格 10 分钟** — 我写个 systemd timer watcher，每分钟探活，连续 10 分钟通过才把选择切回原节点。 语义精确，但多一个常驻进程，而且它挂了主备切换就失效了。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L165] User: [OpenClaw exec completion] Disable automatic completion turns with tools.exec.notifyOnExit=false; check per-agent overrides. Background exec and process poll remain available.
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L169] Assistant: 刚才那条异步的出口 IP 测试回来了，补上一个之前没拿到的关键数据： ``` 直连对照 ipinfo.io/ip → 222.205.124.60 ``` 这是**你的真实直连出口**——`222.205.0.0/16` 属中国电信浙江，是纯境内 IP。同一批测试里走代理的四个端点（ipify / ifconfig.me / ipinfo / ipfn）全部 `HTTP=000` 空返回。 这一条正好把前面的判断闭环了： | | 出口 | 走的规则 | 结果 | |---|---|---|---| | 直连（境内网站） | `222
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L170] User: 8b6f6697b1277d86d40118c7f7983ab4 按你推荐A
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L171] Assistant: Token 收到，走方案 A。先拉订阅看内容。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L174] Assistant: 订阅拉到了（215KB 完整 clash 配置），但我的正则没匹配到节点，需要看清楚实际结构。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L178] Assistant: 订阅里有 44 个真实节点（日本/新加坡/香港/台湾/美国LA/加拿大/德国/英国/印度），**注意前 3 条是"流量信息"伪节点**（剩余流量 395.05 GB / 套餐到期 / 过滤掉14条线路），必须排掉，否则会被选成代理。 现在按方案 A 改造配置。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L181] Assistant: 27 个真实 vmess 节点，7 个 GPT 优化线路。现在写配置——用嵌套分组：主节点优先，挂了自动落到订阅里**延迟最低**的那个（而不是随便第一个能连的）。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L184] Assistant: 配置校验通过。现在重启并验证主备切换 —— 主节点现在是坏的，正好可以实测故障转移。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L190] Assistant: `♻️ 订阅优选` 已加载全部 27 个真实节点（信息伪节点已排除），当前选中 `日本-优化`。但 `♻️ 自动选择` 仍指向主节点 —— 需要确认它会不会真的降级。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L196] Assistant: 主节点状态变了 —— 它**时好时坏**。这是关键数据，让我测清楚。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L205] Assistant: 主节点在 **516ms ↔ 5489ms** 之间剧烈抖动。先把最关键的验证做完：订阅线路能不能真跑通。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L208] Assistant: 订阅线路跑通了，出口 `45.149.92.22`。现在恢复自动路由并做最终确认。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L214] Assistant: 出口确认是断的（两个 HTTP=000）—— 主节点已死但 fallback 组要等 10 分钟才重探。先强制触发一次探测恢复。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L217] Assistant: 故障转移生效，出口恢复。记录一下这次的配置变更。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L220] Assistant: 全部跑通了。最终状态： ``` 🐟 漏网之鱼 → 🚀 节点选择 → ♻️ 自动选择 (Fallback, 主节点优先) ├─ [US]-150.241.187.96 ← 主节点(抖动) └─ ♻️ 订阅优选 (url-test) ← 香港WAP-优化, 27 节点 ``` ## 做了什么 **1. 订阅已接入** —— 拉取成功（215KB / 30 条目）。关键一步是**排掉 3 条伪节点**：`剩余流量：395.05 GB`、`套餐到期：长期有效`、`过滤掉14条线路`。这三条指向真实服务器，所以**能"连通"**，不过滤就
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L220] Assistant: `interval` 这个参数是"一词两用"的** —— 它同时控制"多久发现故障"和"多久考虑切回"，绑死在一起： - `interval` 小 → 故障转移快，但一次侥幸的低延迟采样就把主节点切回来了（不满足你要的"稳定10分钟"） - `interval` 大 → 切回慢，但**故障转移同样慢** 刚才就实拍到了：我设的 `interval: 600`，结果主节点死了之后，**境外流量整整卡 10 分钟全断**（HTTP=000），因为 fallback 组 10 分钟才探一次活。我手动强制探活才立刻切走、恢复出口。 **所以
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L220] Assistant: 不支持凭据文件引用，只能这样）。它也留在了本次会话记录里。建议方便时去商家后台重置一次 token —— 重置后你把新的给我，我改一下 config 就行。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L221] User: 按你推荐，优先稳定比较好，mihomo备选的这个节点优先选择新加坡
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L223] Assistant: 明白，两件事：**上 watcher（③）+ 订阅优先新加坡**。先改配置分组。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L226] Assistant: Python 替换的转义炸了，配置没改动。直接整份重写更干净。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L229] Assistant: 配置校验通过。现在写 watcher。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L232] Assistant: Watcher 写好了。现在装 systemd 定时器并验证。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L238] Assistant: 配置加载正常，但 `♻️ 备用通道` 选了 `♻️ 全球优选` 而不是新加坡 —— 需要查原因。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L256] Assistant: 全部上线，实测通过。 ## 最终拓扑 ``` 🐟 漏网之鱼 → 🚀 节点选择 ← watcher 每分钟在这里切换 ├─ [US]-150.241.187.96 主节点（需连续健康10分钟才用） └─ ♻️ 备用通道 (fallback, 120s) 当前生效 ├─ 🇸🇬 新加坡优选 ← 你指定的优先，3个节点 └─ ♻️ 全球优选 新加坡全挂时兜底，27个节点 ``` ## 实测证据 **新加坡优先已生效** —— `♻️ 备用通道` 探活后选中了 `新加坡-优化3`，不是全局最优的香港线路： ``` [Fallback]
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L256] Assistant: `~/scripts/mihomo-primary-gate.sh` | — | | 定时器 | `mihomo-primary-gate.timer` | active，每 60s | | 配置 | `~/.config/mihomo/config.yaml` | 600（含 token） | | 日志 | `journalctl --user -u mihomo-primary-gate.service` | — | 阈值可调：`GATE_PROBE_TIMEOUT_MS`（默认 2000ms，我按"优先稳定"取严）、`GATE
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L257] User: 改成目前健康的可以吗
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L259] Assistant: 先把当前所有节点实测一遍，才知道"健康的"具体是哪个。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L262] Assistant: 扫描结果很关键 —— **新加坡其实是这批里最慢的一档**，和你刚才指定的偏好冲突了。我先把数据摆出来： | 排名 | 节点 | 延迟 | |---|---|---| | 🥇 | **香港WAP-优化** | **208 ms** | | 🥈 | 台湾-优化 | 272 ms | | 🥉 | 香港WAP-优化3 | 651 ms | | 4 | 台湾-优化3 | 655 ms | | 5 | 日本-优化3 | 830 ms | | … | 新加坡-优化-GPT | 2919 ms | | … | 新加坡-优化3 | 2921 
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L265] Assistant: 校验报错说明问题了：`🚀 节点选择` 直接引用了 provider 里的节点名 —— 但 provider 节点只能用 `use:` + `filter` 引入，不能按名字引用。改用锁定组。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L268] Assistant: 校验通过。重启加载并验证。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L274] Assistant: 链路通了，出口正常。但我发现一个**自己引入的缺陷**：`⭐ 主节点` 被放在了选择器第一位，mihomo 启动默认就选了它 —— 这绕过了 10 分钟稳定门槛。默认必须是安全的备用通道。
+[main/sessions/main/9b02f2cb-699a-4796-9645-39f79a71ad48#L286] Assistant: 改完了，主节点已经换成当前最健康的那个。 ## 现在的拓扑 ``` 🐟 漏网之鱼 → 🚀 节点选择 ← watcher 每分钟在这里切 ├─ ♻️ 备用通道 (fallback 120s) 当前生效（默认安全位） │ ├─ 🇸🇬 新加坡优选 ← 你指定的优先 │ └─ ♻️ 全球优选 └─ ⭐ 主节点 → 香港WAP-优化 ← 208ms，需连续健康10分钟才启用 ``` ## 改了什么 **1. 主节点换成 `香港WAP-优化`** —— 全量扫描 27 个节点，16 个可用，它是唯一稳定进 300ms 的。旧的 `[US
