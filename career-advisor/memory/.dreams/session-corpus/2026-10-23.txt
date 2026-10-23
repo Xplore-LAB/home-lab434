@@ -1,0 +1,2 @@
+[career-advisor/sessions/career-advisor/d9e17037-d623-432d-9b20-af3490482297#L6] Assistant: I'll start by auditing the full directory structure and reading all SKILL.md files before making any changes.
+[career-advisor/sessions/career-advisor/d9e17037-d623-432d-9b20-af3490482297#L12] Assistant: The workshop-skills directory is empty — no skills, no subdirectories, no files. There's nothing to review, consolidate, or restructure. NO_REPLY
