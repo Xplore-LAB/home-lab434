@@ -67,6 +67,23 @@
 - **硬阻塞（架构，不是缺依赖）**：DeepInfer 官方只支持 **NVIDIA SM100**（数据中心 Blackwell）或 **昇腾 950**。本机 GB10 是 **compute capability 12.1 / sm_121**，FlashMLA、DeepGEMM 这类 vendored kernel 面向 sm_100a，编不过或跑不对。工具链本身齐全（CUDA 13.0.88、gcc 13.3、Python 3.12.3、torch 2.11.0+cu130），要跑必须改 arch flag 往 sm_121 移植，DeepGEMM 还要确认 CUTLASS/PTX 路径，工作量大且成功率不确定。
 - **结论**：本机要用 DeepSeek-V4.1-Flash 推理，走已跑通的 vLLM/SGLang 路线（见 `~/src/dgx-spark-vllm-*`、`~/src/qwen38-sglang-deploy`）远比硬啃 DeepInfer 划算。DeepInfer 这份源码留作参考/二次开发底座。
 
+## 工作区自动 git 同步曾静默失败 17 天（2026-10-24 修复） <!-- project: github.com/Xplore-LAB/home-lab434 -->
+
+- **症状**：本地 `main` 领先 `origin/main` **32 个提交**，全部推不上去；`~/logs/auto-git-sync.log` 里有 **62 次** `! [rejected] main -> main (fetch first)`，但脚本每次仍写「同步完成」。
+- **根因（两层叠加）**：
+  1. 2026-10-07 用户在 GitHub 网页端给本仓库新增了 `README.md`（commit `06e425e`），本地 `main` 没有这个文件 → **分支分叉**。之后每次 push 都被拒（非 fast-forward）。
+  2. `.git/hooks/post-commit` 写的是 `git push "$REMOTE" "$BRANCH" 2>/dev/null || true` → **错误被完全吞掉**；`auto-git-sync.sh` 也只把 push 输出重定向进日志，然后无条件打印「同步完成」。**两层都不报警，所以 17 天无人发现。**
+- **修复**：
+  - 手动 `git merge --no-edit origin/main`（**不 force、不 rebase、不改写历史**——远端那个 README.md 是用户的，必须保留）→ `3038e17`，然后 push 成功，33 个提交全部落地，GitHub 上 `README.md` / `MEMORY.md` / `memory/*.md` 全部 HTTP 200。
+  - 改 `~/.config/scripts/auto-git-sync.sh`：push 失败时自动 `fetch` + `merge --no-edit` + 重推；仍失败则写「同步失败 —— 需人工处理」并 `exit 1`，**不再谎报成功**。
+  - 改 `.git/hooks/post-commit`：去掉 `2>/dev/null || true`，失败写进 `~/logs/auto-git-sync.log`。**恢复动作留给 cron 脚本，不在 hook 里 merge** —— 避免用户刚提交的瞬间把一次 merge 带进工作树。
+  - 两处旧文件都留了 `.bak.<时间戳>` 备份。
+- **验证**：造了一个临时文件跑真实 cron 脚本 → commit + push 成功，`raw.githubusercontent.com` 上能取到；删除后再跑一次 → 删除也推到远端。ahead/behind 归零，工作树干净。
+- **教训（可复用）**：
+  1. **「自动同步」类脚本必须让失败可见**。`|| true` + 无条件打印「成功」= 把 17 天的数据丢失伪装成正常。日志里出现 `rejected` 却仍然报成功，是这类 bug 的典型签名。
+  2. **远端被网页端改动会造成分叉**，此后所有自动 push 都会静默失败。查同步问题先 `git fetch` + `git rev-list --count origin/main..main`，别只看 `git status`。
+  3. **修复分叉用 merge 不用 force**。远端的 commit 可能是用户手工加的（README），force 会直接抹掉。
+
 ## 本机后训练工具链现状（2026-10-24 审计） <!-- project: github.com/Xplore-LAB/home-lab434 -->
 
 - **venv 里已自带全套核心栈**（`~/apps/ai-services/vllm-env`）：`torch 2.11.0+cu130` / `transformers 5.19.0` / `trl 1.10.0` / `peft 0.21.2` / `accelerate 1.14.0` / `deepspeed 0.19.5` / `datasets 5.0.1` / `bitsandbytes 0.50.1` / `vllm 0.22.1` / `ray 2.55.0` / `triton 3.6.0` / `wandb 0.28.2`。**绝大多数需求不用再装环境**。
