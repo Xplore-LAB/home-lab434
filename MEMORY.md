@@ -58,3 +58,11 @@
 - **硬件**：`NVIDIA GB10`，`torch.cuda.is_available() = True`
 - **验证命令**：`/home/lab434/apps/ai-services/vllm-env/bin/python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"`
 - **意义**：后续本地训练/微调/rollout 优先用这个 venv，不要再从零装 PyTorch。
+
+## DeepInfer 源码已落地本机，但架构不匹配（2026-10-24）
+
+- **官方仓库是 `deepseek-ai/DeepInfer`**（不是 Xperience1112/DeepInfer，那个 404）；Apache-2.0，21.5k star，HEAD `9bd9cf2`。
+- **本地路径** `~/src/deepinfer`（644 MB），6 个 vendor 子模块 + 嵌套共 16 个 submodule 全部拉到 pinned commit，工作树干净。构建顺序由 `build.sh` → `scripts/build_vendor.sh` 决定：DeepSelect → FlashMLA → DeepEP → DeepGEMM，每个编成 wheel 再装。
+- **sdist**：`~/data/downloads/deepinfer-0.1.0.tar.gz`（0.6 MB，sha256 `959b9bd010893b4c6dc60be0dd822e10e7f1ae1e53289233a83741f76c3d681a`）。PyPI 只有 sdist 没 wheel，且 `pip install` 会拉 torch 2.13.0+cu132（高于本机 2.11.0+cu130），所以别用 pip 装。
+- **硬阻塞（架构，不是缺依赖）**：DeepInfer 官方只支持 **NVIDIA SM100**（数据中心 Blackwell）或 **昇腾 950**。本机 GB10 是 **compute capability 12.1 / sm_121**，FlashMLA、DeepGEMM 这类 vendored kernel 面向 sm_100a，编不过或跑不对。工具链本身齐全（CUDA 13.0.88、gcc 13.3、Python 3.12.3、torch 2.11.0+cu130），要跑必须改 arch flag 往 sm_121 移植，DeepGEMM 还要确认 CUTLASS/PTX 路径，工作量大且成功率不确定。
+- **结论**：本机要用 DeepSeek-V4.1-Flash 推理，走已跑通的 vLLM/SGLang 路线（见 `~/src/dgx-spark-vllm-*`、`~/src/qwen38-sglang-deploy`）远比硬啃 DeepInfer 划算。DeepInfer 这份源码留作参考/二次开发底座。
