@@ -1,0 +1,2 @@
+[main/sessions/main/1754bc32-d502-4298-b430-50522d80fa4d#L15350] User: [OpenClaw exec completion] Disable automatic completion turns with tools.exec.notifyOnExit=false; check per-agent overrides. Background exec and process poll remain available.
+[main/sessions/main/1754bc32-d502-4298-b430-50522d80fa4d#L15386] User: [OpenClaw exec completion] Disable automatic completion turns with tools.exec.notifyOnExit=false; check per-agent overrides. Background exec and process poll remain available.
