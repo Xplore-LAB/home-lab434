@@ -78,7 +78,7 @@
   - 改 `~/.config/scripts/auto-git-sync.sh`：push 失败时自动 `fetch` + `merge --no-edit` + 重推；仍失败则写「同步失败 —— 需人工处理」并 `exit 1`，**不再谎报成功**。
   - 改 `.git/hooks/post-commit`：去掉 `2>/dev/null || true`，失败写进 `~/logs/auto-git-sync.log`。**恢复动作留给 cron 脚本，不在 hook 里 merge** —— 避免用户刚提交的瞬间把一次 merge 带进工作树。
   - 两处旧文件都留了 `.bak.<时间戳>` 备份。
-- **验证**：造了一个临时文件跑真实 cron 脚本 → commit + push 成功，`raw.githubusercontent.com` 上能取到；删除后再跑一次 → 删除也推到远端。ahead/behind 归零，工作树干净。
+- **验证（两条路径都测了）**：(1) 造临时文件跑真实 cron 脚本 → commit + push 成功，`raw.githubusercontent.com` 上能取到；删除后再跑 → 删除也推到远端。(2) **分叉恢复分支在一次性克隆里单独验证**：造出与 10-07 完全同构的场景（远端加 README.md、本地领先 1 个提交）→ push 被拒 → fetch+merge+push 成功，**远端 README.md 与本地内容都保住**，behind 归零。真实 repo 未参与该测试。
 - **教训（可复用）**：
   1. **「自动同步」类脚本必须让失败可见**。`|| true` + 无条件打印「成功」= 把 17 天的数据丢失伪装成正常。日志里出现 `rejected` 却仍然报成功，是这类 bug 的典型签名。
   2. **远端被网页端改动会造成分叉**，此后所有自动 push 都会静默失败。查同步问题先 `git fetch` + `git rev-list --count origin/main..main`，别只看 `git status`。
