@@ -59,10 +59,20 @@
 - **验证命令**：`/home/lab434/apps/ai-services/vllm-env/bin/python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"`
 - **意义**：后续本地训练/微调/rollout 优先用这个 venv，不要再从零装 PyTorch。
 
-## DeepInfer 源码已落地本机，但架构不匹配（2026-10-24）
+## DeepInfer 源码已落地本机，但架构不匹配（2026-10-24） <!-- project: github.com/Xplore-LAB/home-lab434 -->
 
 - **官方仓库是 `deepseek-ai/DeepInfer`**（不是 Xperience1112/DeepInfer，那个 404）；Apache-2.0，21.5k star，HEAD `9bd9cf2`。
 - **本地路径** `~/src/deepinfer`（644 MB），6 个 vendor 子模块 + 嵌套共 16 个 submodule 全部拉到 pinned commit，工作树干净。构建顺序由 `build.sh` → `scripts/build_vendor.sh` 决定：DeepSelect → FlashMLA → DeepEP → DeepGEMM，每个编成 wheel 再装。
 - **sdist**：`~/data/downloads/deepinfer-0.1.0.tar.gz`（0.6 MB，sha256 `959b9bd010893b4c6dc60be0dd822e10e7f1ae1e53289233a83741f76c3d681a`）。PyPI 只有 sdist 没 wheel，且 `pip install` 会拉 torch 2.13.0+cu132（高于本机 2.11.0+cu130），所以别用 pip 装。
 - **硬阻塞（架构，不是缺依赖）**：DeepInfer 官方只支持 **NVIDIA SM100**（数据中心 Blackwell）或 **昇腾 950**。本机 GB10 是 **compute capability 12.1 / sm_121**，FlashMLA、DeepGEMM 这类 vendored kernel 面向 sm_100a，编不过或跑不对。工具链本身齐全（CUDA 13.0.88、gcc 13.3、Python 3.12.3、torch 2.11.0+cu130），要跑必须改 arch flag 往 sm_121 移植，DeepGEMM 还要确认 CUTLASS/PTX 路径，工作量大且成功率不确定。
 - **结论**：本机要用 DeepSeek-V4.1-Flash 推理，走已跑通的 vLLM/SGLang 路线（见 `~/src/dgx-spark-vllm-*`、`~/src/qwen38-sglang-deploy`）远比硬啃 DeepInfer 划算。DeepInfer 这份源码留作参考/二次开发底座。
+
+## 本机后训练工具链现状（2026-10-24 审计） <!-- project: github.com/Xplore-LAB/home-lab434 -->
+
+- **venv 里已自带全套核心栈**（`~/apps/ai-services/vllm-env`）：`torch 2.11.0+cu130` / `transformers 5.19.0` / `trl 1.10.0` / `peft 0.21.2` / `accelerate 1.14.0` / `deepspeed 0.19.5` / `datasets 5.0.1` / `bitsandbytes 0.50.1` / `vllm 0.22.1` / `ray 2.55.0` / `triton 3.6.0` / `wandb 0.28.2`。**绝大多数需求不用再装环境**。
+- **已修复（重要）**：该 venv 原本是从 `/home/lab434/vllm-env` 搬到 `apps/ai-services/` 下的，**99 个 console script 的 shebang 全部指向已不存在的旧路径**，导致 `pip` / `trl` / `accelerate` / `deepspeed` 等全部报 "找不到需要的文件"。已用 sed 批量改回真实路径，现在 `trl --help`、`accelerate env` 均正常。以后这个 venv 搬目录后要重刷 shebang。
+- **本轮新装**：`liger-kernel 0.8.5`（纯 Triton，JIT 编译，**arm64 可用**，34 个 kernel 就绪，`use_liger_kernel=True` 是本机显存紧张的正解）、`kernels 0.17.2`。
+- **flash-attn arm64 打通（本机独有技巧）**：PyPI **无 aarch64 wheel**，但 HF `kernels-community/flash-attn` 有预编译 `build/torch211-cxx11-cu130-aarch64-linux/`，正好对上本机 torch 2.11+cu130。做法 = HF 拉编译好的 `.so` + PyPI sdist 里的纯 python 部分（`utils/ losses/ models/ modules/ cute/` 等）合并，再手写 `flash_attn-2.8.3.post2.dist-info` 才能让 `transformers.is_flash_attn_2_available()` 返回 True（否则 transformers 认不出）。已装在 site-packages。**注意**：该 fatbin 只含 sm_80/90/100/120 cubin、无 sm_121、无 PTX，靠 CUDA 次版本向前兼容跑在 sm_121 上；import 已验证 OK，**真实 kernel 调用未验证**（GPU 显存被占满，见下）。
+- **GPU 现状（做训练前必须先看）**：GB10 是 128 GB 统一内存，`:8000` 的 35B vLLM（OpenClaw 默认模型，root 起）占 63 GB，`kev.serve` 占 11.4 GB，宿主可用内存只剩 ~13 GB。此时连 `torch.empty(1MB, device='cuda')` 都会 OOM，**任何训练前必须先降 35B 的 `--gpu-memory-utilization` 或临时停它**。
+- **框架选型结论**：`verl`（24k★，生态最活跃）**必须开独立 venv**——它 pin `transformers>=5.5.3,<5.13`（本机 5.19.0 冲突）、`tensordict>=0.8.0,<=0.10.0`（有 aarch64 wheel ✓）、`flash-attn`（无 wheel ✗）、`sglang 0.5.8`。`ms-swift` 会把 `peft` 降到 0.20.0、`trl` 降到 0.29.1、`datasets` 降到 4.8.4，**绝不能装进生产 venv**。`LLaMA-Factory` / `axolotl` 是纯 py3 wheel 可装但定位是 SFT/DPO 不做 RL。`unsloth` 完全无 arm64 wheel，排除。
+- **前两次 GRPO 失败的真正原因不是工具**（关键教训）：`~/src/openrlhf-project` 100 步 `reward_mean` 恒为 0.0、`adv_std` 恒为 0.0 = 典型"组内全错、advantage 恒零"；`~/src/rl-grpo-air-nl2sql` 44 分钟跑完 100 步但 eval accuracy=0.0，曲线显示 reward 恒 1.0 而 `sql` 分量只有 0.0~0.05 = **格式 reward 掩盖了能力 reward（奖励与能力脱钩）**。两次都是任务难度不在 pass@k 甜蜜区 + reward 设计错，不是框架不行。换框架前先修 reward。
