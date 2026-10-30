@@ -1,0 +1,2 @@
+[career-advisor/sessions/career-advisor/6f34005a-477c-42a6-9118-a5c4534aff5a#L6] Assistant: I'll start by auditing the directory structure and reading all SKILL.md files to understand the full collection.
+[career-advisor/sessions/career-advisor/6f34005a-477c-42a6-9118-a5c4534aff5a#L12] Assistant: The directory is empty — no SKILL.md files, no subdirectories, no supporting files. There's nothing to review, consolidate, or restructure. **NO_REPLY**
